@@ -1,8 +1,7 @@
 define [], () ->
-	(action) ->
-		initialize: (game) ->
+	class Component
+		constructor: (game) ->
 			@entities = []
-			@
 
 		register: (entity) ->
 			@entities[entity.id] = entity
@@ -13,4 +12,7 @@ define [], () ->
 		update: ->
 			for entity in @entities
 				if entity != undefined
-					entity[action]()
+					@step(entity)
+
+		step: ->
+			throw "Must override step method of Component"

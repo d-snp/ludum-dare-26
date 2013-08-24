@@ -8,9 +8,9 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 
 	initializeComponents: ->
 		@components =
-			canvas: canvasComponent
-			keyboardControlled: keyboardControlled
-			movesAround: movesAround
+			canvas: new canvasComponent(@)
+			keyboardControlled: new keyboardControlled(@)
+			movesAround: new movesAround(@)
 
 	start: ->
 		@initializeScene()
@@ -19,7 +19,11 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 	initializeScene: ->
 		@initializeBackground()
 		@initializeForeGround()
+		@createPlayer()
+		@createOpponent()
 
+
+	createPlayer: ->
 		entity = @createEntity(
 			position:
 				x: 250
@@ -33,9 +37,28 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 				duration: 1000
 		)
 
-		@components.canvas.attach_to entity
-		@components.keyboardControlled.attach_to entity
-		@components.movesAround.attach_to entity
+		@components.canvas.register(entity)
+		@components.keyboardControlled.register(entity)
+		@components.movesAround.register(entity)
+
+	createOpponent: ->
+		entity = @createEntity(
+			faces: 'left'
+			position:
+				x: 450
+				y: 250
+
+			image:
+				url: 'images/lame_guy.png'
+
+			animation:
+				frames: 5
+				duration: 1000
+		)
+
+		@components.canvas.register(entity)
+		@components.keyboardControlled.register(entity)
+		@components.movesAround.register(entity)
 
 	runGameLoop: ->
 		STEPS_PER_SECOND = 15
@@ -46,6 +69,8 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 		@step += 1
 		for name,engine of @engines
 			engine.update()
+		for name,component of @components
+			component.update() if component.update?
 
 	createEntity: (entity={})->
 		entity.id = @entities.length

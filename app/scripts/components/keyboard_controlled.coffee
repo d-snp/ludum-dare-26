@@ -1,35 +1,38 @@
-define ['lib/keyboard'], (kb) ->
-	initialize: ->
-		@control_state = {}
+define ['lib/keyboard', 'component'], (kb, cComponent) ->
+	class KeyboardControlled extends cComponent
+		register: (entity) ->
+			@initialize.apply(entity)
+			super(entity)
 
-		key_configuration =
-			right: 'right'
-			left: 'left'
-			down: 'down'
-			up: 'up'
+		initialize: ->
+			@control_state = {}
 
-		for control,button of key_configuration
-			((control) =>
-				@control_state[control] =
-					down: false
-					pressed: false
+			key_configuration =
+				right: 'right'
+				left: 'left'
+				down: 'down'
+				up: 'up'
 
-				kb.on button,
-					(=>
-					 @control_state[control].down = true
-					),
-					(=>
-						if @control_state[control].down
-							@control_state[control].pressed = true
-						@control_state[control].down = false
-					)
-			)(control)
+			for control,button of key_configuration
+				((control) =>
+					@control_state[control] =
+						down: false
+						pressed: false
 
-	reset_input: ->
-		for control,state of @control_state
-			state.pressed = false
+					kb.on button,
+						(=>
+						 @control_state[control].down = true
+						),
+						(=>
+							if @control_state[control].down
+								@control_state[control].pressed = true
+							@control_state[control].down = false
+						)
+				)(control)
 
-	attach_to: (entity) ->
-		entity.reset_input = @reset_input
-		entity.game.engines.input.register(entity)
-		@initialize.apply(entity)
+		reset_input: ->
+			for control,state of @control_state
+				state.pressed = false
+
+		step: (entity)->
+			@reset_input.apply(entity)
