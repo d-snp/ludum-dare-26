@@ -24,6 +24,13 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 			position:
 				x: 250
 				y: 250
+
+			image:
+				url: 'images/lame_guy.png'
+
+			animation:
+				frames: 5
+				duration: 1000
 		)
 
 		@components.canvas.attach_to entity
@@ -35,7 +42,7 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 		setInterval (=> @update()), 1000 / STEPS_PER_SECOND
 
 	update: ->
-		console.log 'step ' + @step
+		console.log 'step'
 		@step += 1
 		for name,engine of @engines
 			engine.update()

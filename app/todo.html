@@ -27,17 +27,47 @@
                     <li>Game viewport</li>
                     <li>Game loop</li>
                     <li>Basic entities</li>
+                    <li>Process input</li>
+                    <li>Run animations</li>
                 </ul>
 
                 <h3>What to do:</h3>
                 <ul>
-                    <li>Process input (DOING NOW)</li>
-                    <li>Run animations</li>
-                    <li>Game logic(which is basically the whole game :P)</li>
+                    <li>What attack system am I going to use (DOING NOW)</li>
+                    <li>There's a dummy opponent</li>
+                    <li>You can attack the opponent (what attacks are there?)</li>
+                    <li>There's rounds of 10 seconds</li>
                 </ul>
 
                 <h3>Messages</h3>
                 <ul>
+                    <li>
+                        So I built animations as just a special case of image having canvas elements. I think it's a bit hacky, but it works fine and I think it's quite maintainable. Now for the game logic part..
+
+                        I think I want to have it be an arena fighter, like street fighter, but obviously more simple. The idea is that every match is at most 10 seconds, if you don't defeat your opponent in 10 seconds you both lose.
+
+                        Also a bit unrelated, but I there's something wrong with my component system, I messed up the way they are updated. I now define functions on the entities, which is a bit retarded. It should be that the functions are just on the components, and they are executed for every entity that has it attached. I also don't like my engines, something is really wrong with them.
+                    </li>
+                    <li>
+                        What do I want?
+
+                        There's objects that don't need to be redrawn each animationFrame, so they're static objects.
+
+                        There's objects that do need to be redrawn, animated or dynamic objects.
+
+                        An object has one current animation. The animation keeps a frame number, and is timed against realtime.
+
+                        The animation can change at any moment.
+
+                        The animation can have custom update code.
+
+                        A canvas element usually has an image.
+                    </li>
+                    <li>Processing input took longer than I wanted, I had to help my GF and the keyboard library I usually use wasn't suitable for this purpose. I think the architecture of the game is
+                    ok, but I had to think a long time how I want to make sure movement is going to work
+                    right in the final game. I've decided components like 'moves_around' are going to state
+                    their intent, and the game logic engine will solve the intentions.
+                    </li>
                     <li>I've built a pretty decent game engine with entities and components. So far I really like how grunt updates my browser when I change something, but it doesn't pick up on some new files I created yet, perhaps I need to restart it.</li>
                     <li>So I've been working for ~3 hours now. Had a few too many breaks than I wanted but it's ok.</li>
                 </li>

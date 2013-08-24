@@ -4,7 +4,7 @@ require.config({
     }
 });
 
-require(['game', 'jquery', 'engines/draw','engines/input', 'engines/generic'],
+require(['game', 'jquery', 'engines/draw','engines/input', 'engines/generic','polyfills'],
  function (game, $, drawEngine,inputEngine,genericEngine) {
     'use strict';
 

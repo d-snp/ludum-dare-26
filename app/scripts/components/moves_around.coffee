@@ -10,7 +10,6 @@ define [], () ->
 			@position.y -= 10
 		if @control_state.down.down or @control_state.down.pressed
 			@position.y += 10
-		console.log 'act'
 
 	attach_to: (entity) ->
 		entity.game.engines.action.register(entity)

@@ -27,10 +27,7 @@ define ['lib/keyboard'], (kb) ->
 
 	reset_input: ->
 		for control,state of @control_state
-			if state.pressed
-				console.log control + ' was pressed'
 			state.pressed = false
-		console.log 'reset'
 
 	attach_to: (entity) ->
 		entity.reset_input = @reset_input
