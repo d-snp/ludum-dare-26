@@ -7,6 +7,7 @@ define ['components/canvas', 'components/keyboard_controlled',
 		@step = 0
 		@entities = []
 		@initializeComponents()
+		@eventSubscriptions = {}
 
 	initializeComponents: ->
 		# NOTE: this only magically works as long as for loops magically iterate over this loop
@@ -39,10 +40,18 @@ define ['components/canvas', 'components/keyboard_controlled',
 
 			image:
 				url: 'images/lame_guy.png'
+				width: 60
+				height: 100
 
-			animation:
-				frames: 5
-				duration: 1000
+			animations:
+				move:
+					index: 0
+					frames: 5
+					duration: 1000
+				pierce:
+					index: 1
+					frames: 5
+					duration: 1000
 
 			default_action: (if keyboard then name: 'defend' else name: 'none')
 		)
@@ -81,6 +90,17 @@ define ['components/canvas', 'components/keyboard_controlled',
 		for entity in @entities
 			if entity != null
 				block(entity)
+
+	on: (name,block) ->
+		@eventSubscriptions[name] ?= []
+		id = @eventSubscriptions[name].length
+		@eventSubscriptions[name].push(block)
+		id
+
+	trigger: (event) ->
+		if @eventSubscriptions[name]?
+			for block in @eventSubscriptions[name]
+				block(event) if block?
 
 	initializeBackground: () ->
 		canvas = document.createElement("canvas")

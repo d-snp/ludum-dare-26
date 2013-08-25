@@ -30,11 +30,9 @@ define ['component'], (cComponent) ->
 				image = new Image()
 				image.src = @image.url 
 				image.onload = () =>
-					if @animation
-						canvas.width = image.width / @animation.frames
-					else
-						canvas.width = image.width
-					canvas.height = image.height
+					@image.ready = true
+					canvas.width = @image.width
+					canvas.height = @image.height
 					canvas.image = image
 					canvas.ctx = ctx
 					ctx.clear = -> @clearRect(0,0,canvas.width,canvas.height)
@@ -52,7 +50,7 @@ define ['component'], (cComponent) ->
 					@animation.previous_frame = current_frame
 					if @canvas.image?
 						@canvas.ctx.clear()
-						frame_width = @canvas.image.width / @animation.frames
+						frame_width = @image.width
 
 						if @faces == 'left' and !@canvas.flipped?
 							@canvas.ctx.translate(@canvas.width,0)
@@ -66,13 +64,26 @@ define ['component'], (cComponent) ->
 						@canvas.ctx.drawImage(
 							@canvas.image,
 							frame_width * current_frame,
-							0,
-							frame_width,
-							@canvas.image.height,
+							@canvas.height * @animation.index,
+							frame_width ,
+							@canvas.height,
 							0,0,
 							frame_width,
-							@canvas.image.height
+							@canvas.height
 						 )
+			else if @image.ready && !@image.drawn
+				if @faces == 'left' and !@canvas.flipped?
+					@canvas.ctx.translate(@canvas.width,0)
+					@canvas.ctx.scale(-1,1)
+					@canvas.flipped = true
+				else if @faces != 'left' and @canvas.flipped?
+					@canvas.ctx.translate(@canvas.width,0)
+					@canvas.ctx.scale(-1,1)
+					@canvas.flipped = true
+				@canvas.ctx.drawImage(@canvas.image,0,0)
+				@image.drawn = true
+
+
 
 			@canvas.style.top = @position.y + 'px'
 			@canvas.style.left = @position.x + 'px'
