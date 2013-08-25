@@ -1,5 +1,5 @@
-define ['component'], (cComponent) ->
-	class MovesAround extends cComponent
+define ['component'], (Component) ->
+	class MovesAround extends Component
 		step: (entity) ->
 			@act.apply(entity)
 

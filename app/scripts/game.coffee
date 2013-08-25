@@ -1,16 +1,23 @@
 #global define
-define ['components/canvas', 'components/keyboard_controlled', 'components/moves_around'], (canvasComponent,keyboardControlled,movesAround) ->
+define ['components/canvas', 'components/keyboard_controlled',
+ 'components/moves_around', 'components/attacks_defends', 'components/fights'
+ 'components/acts'], (
+		CanvasComponent,KeyboardControlled,MovesAround,AttacksDefends,Fights,Acts) ->
 	initialize: ->
 		@step = 0
 		@entities = []
-		@engines = {}
 		@initializeComponents()
 
 	initializeComponents: ->
+		# NOTE: this only magically works as long as for loops magically iterate over this loop
+		# in declaration order. If it is reordered stuff will break.
 		@components =
-			canvas: new canvasComponent(@)
-			keyboardControlled: new keyboardControlled(@)
-			movesAround: new movesAround(@)
+			canvas: new CanvasComponent(@)
+			movesAround: new MovesAround(@)
+			attacksDefends: new AttacksDefends(@)
+			fights: new Fights(@)
+			acts: new Acts(@)
+			keyboardControlled: new KeyboardControlled(@)
 
 	start: ->
 		@initializeScene()
@@ -19,14 +26,15 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 	initializeScene: ->
 		@initializeBackground()
 		@initializeForeGround()
-		@createPlayer()
-		@createOpponent()
+		@playerOne = @createPlayer(250, 'right',true)
+		@playerTwo = @createPlayer(450, 'left',false)
 
-
-	createPlayer: ->
+	createPlayer: (x, faces, keyboard) ->
 		entity = @createEntity(
+			health: 30
+			faces: faces
 			position:
-				x: 250
+				x: x
 				y: 250
 
 			image:
@@ -35,30 +43,23 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 			animation:
 				frames: 5
 				duration: 1000
+
+			default_action: (if keyboard then name: 'defend' else name: 'none')
 		)
 
 		@components.canvas.register(entity)
 		@components.keyboardControlled.register(entity)
 		@components.movesAround.register(entity)
+		@components.attacksDefends.register(entity)
+		@components.fights.register(entity)
+		@components.acts.register(entity)
+		entity
 
-	createOpponent: ->
-		entity = @createEntity(
-			faces: 'left'
-			position:
-				x: 450
-				y: 250
-
-			image:
-				url: 'images/lame_guy.png'
-
-			animation:
-				frames: 5
-				duration: 1000
-		)
-
-		@components.canvas.register(entity)
-		@components.keyboardControlled.register(entity)
-		@components.movesAround.register(entity)
+	opponents: (player) ->
+		if player == @playerOne
+			[@playerTwo]
+		else
+			[@playerOne]
 
 	runGameLoop: ->
 		STEPS_PER_SECOND = 15
@@ -67,8 +68,6 @@ define ['components/canvas', 'components/keyboard_controlled', 'components/moves
 	update: ->
 		console.log 'step'
 		@step += 1
-		for name,engine of @engines
-			engine.update()
 		for name,component of @components
 			component.update() if component.update?
 
