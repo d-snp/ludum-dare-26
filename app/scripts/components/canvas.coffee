@@ -23,6 +23,7 @@ define ['component'], (cComponent) ->
 		initialize: ->
 			canvas = document.createElement("canvas")
 			ctx = canvas.getContext("2d")
+			canvas.className += " character"
 
 			$('#game > .objects').append(canvas)
 
@@ -31,6 +32,8 @@ define ['component'], (cComponent) ->
 				image.src = @image.url 
 				image.onload = () =>
 					@image.ready = true
+					if @default_animation
+						@animation = @default_animation
 					canvas.width = @image.width
 					canvas.height = @image.height
 					canvas.image = image

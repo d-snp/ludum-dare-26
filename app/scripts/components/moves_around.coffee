@@ -29,10 +29,11 @@ define ['component'], (Component) ->
 					way = 'right'
 				if @control_state.left.down or @control_state.left.pressed
 					way = 'left'
-				if @control_state.up.down or @control_state.up.pressed
-					way = 'up'
-				if @control_state.down.down or @control_state.down.pressed
-					way = 'down'
+				# Let's not make this game too complicated.
+				#if @control_state.up.down or @control_state.up.pressed
+				#	way = 'up'
+				#if @control_state.down.down or @control_state.down.pressed
+				#	way = 'down'
 
 				if way?
 					move =

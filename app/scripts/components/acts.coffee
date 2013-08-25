@@ -10,12 +10,16 @@ define ['component'], (Component) ->
 				entity.action = action
 				entity.action.started = @game.step
 				entity.animation = entity.animations[action.name]
+				entity.animation.began = undefined
+				entity.previous_frame = undefined
 
 		resetAction: ->
 			@action = @default_action
 			@idle = true
 			@started = 0
-			@animation = null
+			@animation = @default_animation
+			@animation.began = undefined
+			@animation.previous_frame = undefined
 
 		step: (entity) ->
 			if entity.action.duration?

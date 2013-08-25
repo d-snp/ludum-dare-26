@@ -1,13 +1,13 @@
 #global define
 define ['components/canvas', 'components/keyboard_controlled',
  'components/moves_around', 'components/attacks_defends', 'components/fights'
- 'components/acts'], (
-		CanvasComponent,KeyboardControlled,MovesAround,AttacksDefends,Fights,Acts) ->
+ 'components/acts','components/tournament'], (
+		CanvasComponent,KeyboardControlled,MovesAround,AttacksDefends,Fights,Acts,Tournament) ->
 	initialize: ->
 		@step = 0
 		@entities = []
-		@initializeComponents()
 		@eventSubscriptions = {}
+		@initializeComponents()
 
 	initializeComponents: ->
 		# NOTE: this only magically works as long as for loops magically iterate over this loop
@@ -18,6 +18,7 @@ define ['components/canvas', 'components/keyboard_controlled',
 			attacksDefends: new AttacksDefends(@)
 			fights: new Fights(@)
 			acts: new Acts(@)
+			tournament: new Tournament(@)
 			keyboardControlled: new KeyboardControlled(@)
 
 	start: ->
@@ -27,34 +28,46 @@ define ['components/canvas', 'components/keyboard_controlled',
 	initializeScene: ->
 		@initializeBackground()
 		@initializeForeGround()
-		@playerOne = @createPlayer(250, 'right',true)
-		@playerTwo = @createPlayer(450, 'left',false)
+		@playerOne = @createPlayer('right',true)
+		@playerTwo = @createPlayer('left',false)
 
-	createPlayer: (x, faces, keyboard) ->
+	createPlayer: (faces, keyboard) ->
 		entity = @createEntity(
-			health: 30
+			points: 0
 			faces: faces
-			position:
-				x: x
-				y: 250
 
 			image:
-				url: 'images/lame_guy.png'
-				width: 60
-				height: 100
+				url: 'images/kendo_player.png'
+				width: 80
+				height: 80
 
 			animations:
 				move:
-					index: 0
-					frames: 5
-					duration: 1000
-				pierce:
 					index: 1
 					frames: 5
-					duration: 1000
+					duration: 500
+				pierce:
+					index: 2
+					frames: 5
+					duration: 1100
+				hack:
+					index: 3
+					frames: 5
+					duration: 1100
+				deflect:
+					index: 4
+					frames: 5
+					duration: 1100
+
+			default_animation:
+				index: 0
+				frames: 5
+				duration: 1000
 
 			default_action: (if keyboard then name: 'defend' else name: 'none')
 		)
+		@resetPlayer(entity)
+		@players.push entity
 
 		@components.canvas.register(entity)
 		@components.keyboardControlled.register(entity)
@@ -64,6 +77,15 @@ define ['components/canvas', 'components/keyboard_controlled',
 		@components.acts.register(entity)
 		entity
 
+	resetPlayer: (p) ->
+		p.health = 30
+		x = if p.faces == 'right' then 250 else 450
+		p.position =
+				x: x
+				y: 250
+
+	players: []
+
 	opponents: (player) ->
 		if player == @playerOne
 			[@playerTwo]
@@ -71,7 +93,7 @@ define ['components/canvas', 'components/keyboard_controlled',
 			[@playerOne]
 
 	runGameLoop: ->
-		STEPS_PER_SECOND = 15
+		STEPS_PER_SECOND = 30
 		setInterval (=> @update()), 1000 / STEPS_PER_SECOND
 
 	update: ->
@@ -95,11 +117,13 @@ define ['components/canvas', 'components/keyboard_controlled',
 		@eventSubscriptions[name] ?= []
 		id = @eventSubscriptions[name].length
 		@eventSubscriptions[name].push(block)
+		console.log 'subscribed to ' + name
 		id
 
-	trigger: (event) ->
+	trigger: (name,event) ->
 		if @eventSubscriptions[name]?
 			for block in @eventSubscriptions[name]
+				console.log 'going to trigger ' + name
 				block(event) if block?
 
 	initializeBackground: () ->

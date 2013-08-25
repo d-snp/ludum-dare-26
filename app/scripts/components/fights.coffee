@@ -10,7 +10,9 @@ define ['component'], (Component) ->
 				if entity.action.attack?
 					if (entity.action.effect_frame + entity.action.started) == @game.step
 						for opponent in @game.opponents(entity)
-							opponent.suffers = entity.action.name
+							# If they're close together
+							if Math.abs(opponent.position.x - entity.position.x) < 60
+								opponent.suffers = entity.action.name
 
 			@eachEntity (entity) =>
 				# For each entity, process incoming blow.
@@ -21,4 +23,8 @@ define ['component'], (Component) ->
 					entity.health -= 10
 					console.log 'Entity ' + entity.id + ' suffers hit'
 					if entity.health < 1
-						console.log 'Entity ' + entity.id + ' died.'
+						die =
+							name: 'die'
+							duration: 30
+						entity.act(die)
+
