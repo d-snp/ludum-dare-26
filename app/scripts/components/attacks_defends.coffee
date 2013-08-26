@@ -16,7 +16,7 @@ define ['component'], (Component) ->
 				if way?
 					attack =
 						name: way
-						duration: 30
+						duration: 10
 						attack: true
-						effect_frame: 10
+						effect_frame: 8
 					@act(attack)

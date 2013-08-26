@@ -23,7 +23,9 @@ define ['components/canvas', 'components/keyboard_controlled',
 
 	start: ->
 		@initializeScene()
-		@runGameLoop()
+		setTimeout (=> 
+			@components.tournament.start()
+			@runGameLoop()), 5000
 
 	initializeScene: ->
 		@initializeBackground()
@@ -49,7 +51,7 @@ define ['components/canvas', 'components/keyboard_controlled',
 				pierce:
 					index: 2
 					frames: 5
-					duration: 1100
+					duration: 600
 				hack:
 					index: 3
 					frames: 5
@@ -64,10 +66,31 @@ define ['components/canvas', 'components/keyboard_controlled',
 				frames: 5
 				duration: 1000
 
-			default_action: (if keyboard then name: 'defend' else name: 'none')
+			default_action: 'defend'
 		)
 		@resetPlayer(entity)
 		@players.push entity
+
+
+		if entity.faces == 'right'
+			entity.key_configuration =
+				right: 'd'
+				left: 'a'
+				down: 's'
+				up: 'w'
+				pierce_attack: 'f'
+				hack_attack: 't'
+				deflect_attack: 'y'
+		else
+			entity.key_configuration =
+				right: 'right'
+				left: 'left'
+				down: 'down'
+				up: 'up'
+				pierce_attack: 'num1'
+				hack_attack: 'num2'
+				deflect_attack: 'num3'
+
 
 		@components.canvas.register(entity)
 		@components.keyboardControlled.register(entity)
@@ -78,7 +101,7 @@ define ['components/canvas', 'components/keyboard_controlled',
 		entity
 
 	resetPlayer: (p) ->
-		p.health = 30
+		p.health = 10
 		x = if p.faces == 'right' then 250 else 450
 		p.position =
 				x: x
@@ -98,6 +121,7 @@ define ['components/canvas', 'components/keyboard_controlled',
 
 	update: ->
 		console.log 'step'
+		return if @paused
 		@step += 1
 		for name,component of @components
 			component.update() if component.update?
@@ -132,14 +156,16 @@ define ['components/canvas', 'components/keyboard_controlled',
 
 		$('#game > .background').append(canvas)
 
-		resize = () ->
-			canvas.width = canvas.parentNode.clientWidth
-			canvas.height = canvas.parentNode.clientHeight
-			ctx.fillStyle = '#3333ff'
-			ctx.fillRect(0,0,canvas.width,canvas.height)
+		canvas.className = 'plateau'
+		canvas.width = 400
+		canvas.height = 300
+		ctx.fillStyle = '#000000'
+		ctx.fillRect(0,0,canvas.width,canvas.height)
 
-		resize()
-		$(window).resize resize
+		image = new Image()
+		image.src = "images/plateau.png"
+		image.onload = () =>
+			ctx.drawImage(image,0,0)
 	
 	initializeForeGround: () ->
 		canvas = document.createElement("canvas")

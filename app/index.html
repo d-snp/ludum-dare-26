@@ -6,15 +6,17 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Ten Sec Ken Do</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
+        <link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <div class="container">
+            <h1>Ten Sec Ken Do</h1>
             <div id="game">
                 <div class="background">
                 </div>
@@ -22,6 +24,16 @@
                 </div>
                 <div class="foreground">
                 </div>
+                <div class="ui">
+                    <div id="countdown">10</div>
+                    <div class="score p1">0</div>
+                    <div class="score p2">0</div>
+                    <div id="message"></div>
+                </div>
+            </div>
+            <div class="explanation">
+                Player one moves with 'wasd' and attacks with 'fty'. Player two moves with the arrow keys and
+                attacks with num1,num2,num3. The attacks are like a rock-paper-scissors game, pierce beats hack beats deflect beats pierce. Win 10 times to defeat your opponent. You both lose a point if the timer ends.
             </div>
         </div>
 

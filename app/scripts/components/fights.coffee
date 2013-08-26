@@ -19,7 +19,7 @@ define ['component'], (Component) ->
 				if (entity.action.name == 'hack' and entity.suffers == 'pierce') or
 						(entity.action.name == 'pierce' and entity.suffers == 'deflect') or
 						(entity.action.name == 'deflect' and entity.suffers == 'hack') or
-						(entity.suffers)
+						(!entity.action.attack? and entity.suffers?)
 					entity.health -= 10
 					console.log 'Entity ' + entity.id + ' suffers hit'
 					if entity.health < 1

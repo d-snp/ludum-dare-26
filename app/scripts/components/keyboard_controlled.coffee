@@ -7,16 +7,7 @@ define ['lib/keyboard', 'component'], (kb, cComponent) ->
 		initialize: ->
 			@control_state = {}
 
-			key_configuration =
-				right: 'right'
-				left: 'left'
-				down: 'down'
-				up: 'up'
-				pierce_attack: 'f'
-				hack_attack: 't'
-				deflect_attack: 'y'
-
-			for control,button of key_configuration
+			for control,button of @key_configuration
 				((control) =>
 					@control_state[control] =
 						down: false

@@ -29,6 +29,7 @@ define ['component'], (Component) ->
 					way = 'right'
 				if @control_state.left.down or @control_state.left.pressed
 					way = 'left'
+				return if way != @faces
 				# Let's not make this game too complicated.
 				#if @control_state.up.down or @control_state.up.pressed
 				#	way = 'up'
@@ -39,6 +40,6 @@ define ['component'], (Component) ->
 					move =
 						name: 'move'
 						direction: way
-						duration: 10
-						distance: 30
+						duration: 5
+						distance: 15
 					@act(move)

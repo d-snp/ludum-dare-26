@@ -2,12 +2,15 @@ define ['component'], (Component) ->
 	class Tournament extends Component
 		constructor: (game) ->
 			super(game)
-			game.started = new Date()
 			game.on('gameOver', (p) => @gameOver(p))
 			game.on('matchOver', (p) => @matchOver(p))
 
+		start: ->
+			@game.started = new Date()
+
 		update: ->
-			@game.timeLeft = 10 - Math.ceil((new Date() - @game.started) / 1000)
+			@game.timeLeft = 11 - Math.ceil((new Date() - @game.started) / 1000)
+			$('#countdown').html(@game.timeLeft)
 
 			if @game.timeLeft == 0 
 				if @game.playerOne.points > 0 then @game.playerOne.points -= 1
@@ -19,6 +22,9 @@ define ['component'], (Component) ->
 					e.action.resolved = true
 					@game.opponents(e)[0].points += 1
 					@game.trigger('gameOver', @game.opponents(e)[0])
+
+			$('.score.p1').html(@game.playerOne.points)
+			$('.score.p2').html(@game.playerTwo.points)
 
 		newRound: ->
 			@game.started = new Date()
